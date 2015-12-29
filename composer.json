@@ -11,7 +11,7 @@
         "responses",
         "tests"
     ],
-    "homepage": "https://github.com/mroca/RequestLogBundle",
+    "homepage": "https://github.com/mRoca/MrocaRequestLogBundle",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
