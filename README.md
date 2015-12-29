@@ -16,8 +16,9 @@ containing the request and the response.
 
 > GET /categories
 
+`app/log/mocks/categories/#GET.json`
+
 ```json
-# app/log/mocks/categories/#GET.json
 {
     "request": {
         "uri": "/categories",
@@ -42,8 +43,8 @@ containing the request and the response.
 
 > PUT /categories/1 {"foo": "bar"}
 
+`app/log/mocks/categories/1#PUT-9bb58.json`
 ```json
-# app/log/mocks/categories/1#PUT-9bb58.json
 {
     "request": {
         "uri": "/categories/1",
@@ -60,6 +61,26 @@ containing the request and the response.
     }
 }
 ```
+
+**File naming strategy**
+
+All files are created with the following convention :
+
+`uri/segments{?sorted-query=string&others}#METHOD{-<md5(sortedJsonContent)>}{-<md5(sortedPostParameters)>}.json`
+
+*Examples* :
+
+URL                                                         | Filename
+----------------------------------------------------------- | ----------------------------------------------------
+GET /                                                       | #GET.json
+GET /categories                                             | categories/#GET.json
+GET /categories/1                                           | categories/1#GET.json
+GET /categories?order[foo]=asc&order[bar]=desc              | categories/?order[bar]=desc&order[foo]=asc#GET.json
+POST /categories PARAMS: foo1=bar1; foo2=bar2               | categories/#POST-92505.json
+POST /categories CONTENT: {"foo1":"bar1", "foo2":"bar2"}    | categories/#POST-92505.json
+PUT /categories/1 CONTENT: {"foo2":"bar2", "foo1":"bar1"}   | categories/1#PUT-92505.json
+
+See the [ResponseLoggerTest](/Tests/Service/ResponseLoggerTest.php#L135) file for more examples.
 
 ## Installation
 
