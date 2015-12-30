@@ -29,7 +29,7 @@
         "fabpot/php-cs-fixer": "^1.11"
     },
     "autoload": {
-        "psr-4": {
+        "psr-0": {
             "Mroca\\RequestLogBundle\\": ""
         }
     },
@@ -39,8 +39,5 @@
         "branch-alias": {
             "dev-master": "0.1.x-dev"
         }
-    },
-    "exclude-from-classmap": [
-        "/Tests/"
-    ]
+    }
 }

@@ -2,6 +2,9 @@
 
 An HTTP requests mock generator symfony bundle.
 
+[![Build Status](https://travis-ci.org/mRoca/MrocaRequestLogBundle.svg)](https://travis-ci.org/mRoca/MrocaRequestLogBundle)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/24b2d907-0ddc-44d5-9ff5-437d3d9e6ad8/mini.png)](https://insight.sensiolabs.com/projects/24b2d907-0ddc-44d5-9ff5-437d3d9e6ad8)
+
 ## Description
 
 This bundle allows to log HTTP requests and associated responses as json files.
