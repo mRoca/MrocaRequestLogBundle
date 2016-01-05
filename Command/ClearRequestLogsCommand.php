@@ -25,8 +25,8 @@ class ClearRequestLogsCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('mroca:response-logs:clear')
-            ->setDescription('Empty the responses mocks directory');
+            ->setName('mroca:request-log:clear')
+            ->setDescription('Empty the requests mocks directory');
     }
 
     /**

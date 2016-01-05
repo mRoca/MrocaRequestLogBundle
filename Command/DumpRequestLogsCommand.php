@@ -26,7 +26,7 @@ class DumpRequestLogsCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('mroca:response-logs:dump')
+            ->setName('mroca:request-log:dump')
             ->setDescription('Copy all responses mocks in another directory')
             ->addArgument('target_directory', InputArgument::REQUIRED, 'The mocks target directory');
     }

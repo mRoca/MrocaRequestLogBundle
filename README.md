@@ -149,13 +149,13 @@ Some useful commands are available to manager your mocks :
 ### Clear all mocks
 
 ```bash
-app/console mroca:response-logs:clear 
+app/console mroca:request-log:clear 
 ```
 
 ### Save mocks in a target directory
 
 ```bash
-app/console mroca:response-logs:dump /tmp/mocksdirtarget
+app/console mroca:request-log:dump /tmp/mocksdirtarget
 ```
 
 ## Dev
