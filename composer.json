@@ -1,0 +1,43 @@
+{
+    "name": "mroca/request-log-bundle",
+    "description": "An HTTP requests mock generator symfony bundle.",
+    "keywords": [
+        "symfony",
+        "bundle",
+        "mock",
+        "api",
+        "logs",
+        "request",
+        "responses",
+        "tests"
+    ],
+    "homepage": "https://github.com/mRoca/MrocaRequestLogBundle",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michel Roca",
+            "email": "mroca.dh@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "symfony/symfony": "~2.3|~3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8",
+        "fabpot/php-cs-fixer": "^1.11"
+    },
+    "autoload": {
+        "psr-0": {
+            "Mroca\\RequestLogBundle\\": ""
+        }
+    },
+    "target-dir": "Mroca/RequestLogBundle",
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    }
+}
