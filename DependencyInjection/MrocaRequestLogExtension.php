@@ -23,6 +23,7 @@ class MrocaRequestLogExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('mroca_request_log.mocks_dir', $config['mocks_dir']);
+        $container->setParameter('mroca_request_log.hash_query_params', $config['hash_query_params']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');

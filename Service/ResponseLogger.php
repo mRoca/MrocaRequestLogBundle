@@ -11,12 +11,19 @@ class ResponseLogger
     /** @var string */
     private $mocksDir;
 
+    /** @var bool */
+    private $hashQueryParams;
+
     /** @var Filesystem */
     private $filesystem;
 
-    public function __construct($mocksDir)
+    const FILENAME_SEPARATOR = '__';
+    const FILENAME_QS_SEPARATOR = '--';
+
+    public function __construct($mocksDir, $hashQueryParams = false)
     {
         $this->mocksDir = rtrim($mocksDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        $this->hashQueryParams = (bool) $hashQueryParams;
         $this->filesystem = new Filesystem();
     }
 
@@ -108,11 +115,15 @@ class ResponseLogger
 
         // Add query parameters
         if (count($requestQueryParameters)) {
-            $filename .= '?'.urldecode(http_build_query(self::sortArray($requestQueryParameters)));
-        }
+            $requestQueryParametersString = urldecode(http_build_query(self::sortArray($requestQueryParameters)));
 
-        // Add HTTP method
-        $filename .= '#'.$requestMethod;
+            // Url encode filename if needed
+            if ($this->hashQueryParams) {
+                $requestQueryParametersString = $this->generateFilenameHash($requestQueryParametersString);
+            }
+
+            $filename .= self::FILENAME_QS_SEPARATOR.$requestQueryParametersString;
+        }
 
         // Add request content hash
         if ($requestContent) {
@@ -120,16 +131,21 @@ class ResponseLogger
             // If JSON, sort data
             $jsonContent = json_decode($requestContent, true);
             if (null !== $jsonContent) {
-                $filename .= $this->generateFilenameHash(json_encode(self::sortArray($jsonContent)));
+                $filename .= self::FILENAME_SEPARATOR.$this->generateFilenameHash(json_encode(self::sortArray($jsonContent)));
             } else {
-                $filename .= $this->generateFilenameHash($requestContent);
+                $filename .= self::FILENAME_SEPARATOR.$this->generateFilenameHash($requestContent);
             }
         }
 
         // Add request parameters hash
         if ($requestParameters) {
-            $filename .= $this->generateFilenameHash(json_encode(self::sortArray($requestParameters)));
+            $filename .= self::FILENAME_SEPARATOR.$this->generateFilenameHash(json_encode(self::sortArray($requestParameters)));
         }
+
+        // Add HTTP method
+        $filenameArray = explode('/', $filename);
+        $filenameArray[count($filenameArray) - 1] = $requestMethod.self::FILENAME_SEPARATOR.end($filenameArray);
+        $filename = implode($filenameArray, '/');
 
         // Add extension
         $filename .= '.json';
@@ -137,9 +153,16 @@ class ResponseLogger
         return $filename;
     }
 
+    /**
+     * Returns a hash from a string.
+     *
+     * @param string $data
+     *
+     * @return string
+     */
     private function generateFilenameHash($data)
     {
-        return '-'.substr(md5($data), 0, 5);
+        return substr(md5($data), 0, 5);
     }
 
     /**

@@ -119,7 +119,17 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
 
         $filename = $this->responseLogger->getFilePathByRequest($request);
 
-        $this->assertSame('categories/#POST-a7353.json', $filename);
+        $this->assertSame('categories/POST____a7353.json', $filename);
+    }
+
+    public function testGetEncodedFilePathByRequest()
+    {
+        $responseLogger = new ResponseLogger($this->workspace, true);
+        $request = Request::create('/categories?order[foo]=asc&order[bar]=desc', 'GET');
+
+        $filename = $responseLogger->getFilePathByRequest($request);
+
+        $this->assertSame('categories/GET__--0d8b1.json', $filename);
     }
 
     /**
@@ -135,17 +145,17 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
     public function requestsMocksNamesProvider()
     {
         return [
-            [Request::create('/', 'GET'), '#GET.json'],
-            [Request::create('/categories', 'GET'), 'categories/#GET.json'],
-            [Request::create('/categories?order[foo]=asc&order[bar]=desc', 'GET'), 'categories/?order[bar]=desc&order[foo]=asc#GET.json'],
-            [Request::create('/categories/1', 'GET'), 'categories/1#GET.json'],
-            [Request::create('/categories/1/articles', 'GET'), 'categories/1/articles#GET.json'],
-            [Request::create('/categories', 'POST', ['foo1' => 'bar1', 'foo2' => 'bar2']), 'categories/#POST-92505.json'],
-            [Request::create('/categories', 'POST', ['foo2' => 'bar2', 'foo1' => 'bar1']), 'categories/#POST-92505.json'],
-            [Request::create('/categories', 'POST', [], [], [], [], 'foobar'), 'categories/#POST-3858f.json'],
-            [Request::create('/categories', 'POST', [], [], [], [], json_encode(['foo' => 'bar'])), 'categories/#POST-9bb58.json'],
-            [Request::create('/categories', 'POST', ['foo2' => 'bar2', 'foo1' => 'bar1'], [], [], [], json_encode(['foo' => 'bar'])), 'categories/#POST-9bb58-92505.json'],
-            [Request::create('/categories/1', 'PUT', [], [], [], [], json_encode(['foo' => 'bar'])), 'categories/1#PUT-9bb58.json'],
+            [Request::create('/', 'GET'), 'GET__.json'],
+            [Request::create('/categories', 'GET'), 'categories/GET__.json'],
+            [Request::create('/categories?order[foo]=asc&order[bar]=desc', 'GET'), 'categories/GET__--order[bar]=desc&order[foo]=asc.json'],
+            [Request::create('/categories/1', 'GET'), 'categories/GET__1.json'],
+            [Request::create('/categories/1/articles', 'GET'), 'categories/1/GET__articles.json'],
+            [Request::create('/categories', 'POST', ['foo1' => 'bar1', 'foo2' => 'bar2']), 'categories/POST____92505.json'],
+            [Request::create('/categories', 'POST', ['foo2' => 'bar2', 'foo1' => 'bar1']), 'categories/POST____92505.json'],
+            [Request::create('/categories', 'POST', [], [], [], [], 'foobar'), 'categories/POST____3858f.json'],
+            [Request::create('/categories', 'POST', [], [], [], [], json_encode(['foo' => 'bar'])), 'categories/POST____9bb58.json'],
+            [Request::create('/categories', 'POST', ['foo2' => 'bar2', 'foo1' => 'bar1'], [], [], [], json_encode(['foo' => 'bar'])), 'categories/POST____9bb58__92505.json'],
+            [Request::create('/categories/1', 'PUT', [], [], [], [], json_encode(['foo' => 'bar'])), 'categories/PUT__1__9bb58.json'],
         ];
     }
 

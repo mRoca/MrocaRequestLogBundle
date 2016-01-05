@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('mocks_dir')->cannotBeEmpty()->info('The generated log files path')->defaultValue('%kernel.logs_dir%/mocks/')->end()
+                ->booleanNode('hash_query_params')->info('Transform query params string into hash in the file names')->defaultFalse()->end()
             ->end()
         ;
 
