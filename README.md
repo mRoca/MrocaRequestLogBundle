@@ -46,7 +46,7 @@ containing the request and the response.
 
 > PUT /categories/1 {"foo": "bar"}
 
-`app/log/mocks/categories/PUT__1-9bb58.json`
+`app/log/mocks/categories/PUT__1-a5e74.json`
 ```json
 {
     "request": {
@@ -69,7 +69,7 @@ containing the request and the response.
 
 All files are created with the following convention :
 
-`uri/METHOD__segments{--sorted-query=string&others}{__<md5(sortedJsonContent)>}{__<md5(sortedPostParameters)>}.json`
+`uri/METHOD__segments{--sorted-query=string&others}{__<sha1_substr5(sortedJsonContent)>}{__<sha1_substr5(sortedPostParameters)>}.json`
 
 *Examples* :
 
@@ -79,12 +79,12 @@ GET /                                                       | GET__.json
 GET /categories                                             | categories/GET__.json
 GET /categories/1                                           | categories/GET__1.json
 GET /categories?order[foo]=asc&order[bar]=desc              | categories/GET__--order[bar]=desc&order[foo]=asc.json
-POST /categories PARAMS: foo1=bar1; foo2=bar2               | categories/POST____92505.json
-POST /categories CONTENT: {"foo1":"bar1", "foo2":"bar2"}    | categories/POST____92505.json
-PUT /categories/1 CONTENT: {"foo2":"bar2", "foo1":"bar1"}   | categories/POST__1__92505.json
+POST /categories PARAMS: foo1=bar1; foo2=bar2               | categories/POST____3e038.json
+POST /categories CONTENT: {"foo1":"bar1", "foo2":"bar2"}    | categories/POST____3e038.json
+PUT /categories/1 CONTENT: {"foo2":"bar2", "foo1":"bar1"}   | categories/POST__1__3e038.json
 
     The filenames query strings can be hashed by setting the `hash_query_params` option to `true`.
-    For example, `categories/GET__--order[bar]=desc&order[foo]=asc.json` will be `categories/GET__--0d8b1.json`
+    For example, `categories/GET__--order[bar]=desc&order[foo]=asc.json` will be `categories/GET__--b0324.json`
 
 See the [ResponseLoggerTest](/Tests/Service/ResponseLoggerTest.php#L135) file for more examples.
 

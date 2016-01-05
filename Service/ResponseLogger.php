@@ -162,7 +162,7 @@ class ResponseLogger
      */
     private function generateFilenameHash($data)
     {
-        return substr(md5($data), 0, 5);
+        return substr(sha1($data), 0, 5);
     }
 
     /**
