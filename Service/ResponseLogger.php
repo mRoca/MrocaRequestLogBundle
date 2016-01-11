@@ -88,11 +88,11 @@ class ResponseLogger
      * `uri/segments?query=string&others#METHOD-md5Content-md5JsonParams.json`.
      *
      * Examples :
-     *  GET http://domain.name/categories => /categories/#GET.json
-     *  GET http://domain.name/categories/1 => /categories/1#GET.json
-     *  GET http://domain.name/categories/1/articles => /categories/1/articles#GET.json
-     *  GET http://domain.name/categories/1/articles?order[title]=desc => /categories/1/articles?order[title]=desc#GET.json
-     *  POST http://domain.name/categories with content => /categories/#POST-a142b.json
+     *  GET http://domain.name/categories => /categories/GET__.json
+     *  GET http://domain.name/categories/1 => /categories/GET__1.json
+     *  GET http://domain.name/categories/1/articles => /categories/1/GET__articles.json
+     *  GET http://domain.name/categories/1/articles?order[title]=desc => /categories/1/GET__articles--order[title]=desc.json
+     *  POST http://domain.name/categories with content => /categories/POST____a142b.json
      *
      * @param Request $request
      *
