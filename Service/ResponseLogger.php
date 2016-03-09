@@ -109,13 +109,13 @@ class ResponseLogger
         $filename = $requestPathInfo;
 
         // Store base endpoint calls with its children
-        if (0 === substr_count($filename, '/') && !empty($filename)) {
+        if ('' !== $filename && 0 === substr_count($filename, '/')) {
             $filename .= DIRECTORY_SEPARATOR;
         }
 
         // Add query parameters
         if (count($requestQueryParameters)) {
-            $requestQueryParametersString = urldecode(http_build_query(self::sortArray($requestQueryParameters)));
+            $requestQueryParametersString = http_build_query(self::sortArray($requestQueryParameters));
 
             // Url encode filename if needed
             if ($this->hashQueryParams) {

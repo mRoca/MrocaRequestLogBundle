@@ -13,13 +13,13 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
     private $umask;
 
     /** @var \Symfony\Component\Filesystem\Filesystem */
-    protected $filesystem = null;
+    protected $filesystem;
 
     /** @var string */
-    protected $workspace = null;
+    protected $workspace;
 
     /** @var ResponseLogger */
-    protected $responseLogger = null;
+    protected $responseLogger;
 
     protected function setUp()
     {
@@ -42,9 +42,9 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
     {
         $this->responseLogger->clearMocksDir();
 
-        $this->assertTrue(!is_file($this->workspace.DIRECTORY_SEPARATOR.'file'));
-        $this->assertTrue(!is_dir($this->workspace.DIRECTORY_SEPARATOR.'dir'));
-        $this->assertTrue(is_dir($this->workspace));
+        self::assertNotTrue(is_file($this->workspace.DIRECTORY_SEPARATOR.'file'));
+        self::assertNotTrue(is_dir($this->workspace.DIRECTORY_SEPARATOR.'dir'));
+        self::assertTrue(is_dir($this->workspace));
     }
 
     public function testDumpMocksTo()
@@ -54,9 +54,9 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
 
         $this->responseLogger->dumpMocksTo($targetPath);
 
-        $this->assertTrue(is_file($targetPath.DIRECTORY_SEPARATOR.'file'));
-        $this->assertTrue(is_dir($targetPath.DIRECTORY_SEPARATOR.'dir'));
-        $this->assertTrue(!is_file($targetPath.DIRECTORY_SEPARATOR.'badfile'));
+        self::assertTrue(is_file($targetPath.DIRECTORY_SEPARATOR.'file'));
+        self::assertTrue(is_dir($targetPath.DIRECTORY_SEPARATOR.'dir'));
+        self::assertNotTrue(is_file($targetPath.DIRECTORY_SEPARATOR.'badfile'));
 
         $this->filesystem->remove($targetPath);
     }
@@ -68,9 +68,9 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
 
         $file = $this->responseLogger->logReponse($request, $response);
 
-        $this->assertTrue(is_file($file));
+        self::assertTrue(is_file($file));
 
-        $this->assertJsonStringEqualsJsonFile($file, '{
+        self::assertJsonStringEqualsJsonFile($file, '{
             "request": {
                 "uri": "/categories?order[name]=asc&limit=5",
                 "method": "GET",
@@ -94,9 +94,9 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
 
         $file = $this->responseLogger->logReponse($request, $response);
 
-        $this->assertTrue(is_file($file));
+        self::assertTrue(is_file($file));
 
-        $this->assertJsonStringEqualsJsonFile($file, '{
+        self::assertJsonStringEqualsJsonFile($file, '{
             "request": {
                 "uri": "/categories",
                 "method": "POST",
@@ -119,7 +119,7 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
 
         $filename = $this->responseLogger->getFilePathByRequest($request);
 
-        $this->assertSame('categories/POST____22845.json', $filename);
+        self::assertSame('categories/POST____22845.json', $filename);
     }
 
     public function testGetEncodedFilePathByRequest()
@@ -129,17 +129,20 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
 
         $filename = $responseLogger->getFilePathByRequest($request);
 
-        $this->assertSame('categories/GET__--b0324.json', $filename);
+        self::assertSame('categories/GET__--90150.json', $filename);
     }
 
     /**
      * @dataProvider requestsMocksNamesProvider
+     *
+     * @param Request $request
+     * @param         $expectedFilename
      */
     public function testMockFilenames(Request $request, $expectedFilename)
     {
         $filename = $this->responseLogger->getFilePathByRequest($request);
 
-        $this->assertSame($expectedFilename, $filename, sprintf('Invalid filename for request %s %s', $request->getMethod(), $request->getRequestUri()));
+        self::assertSame($expectedFilename, $filename, sprintf('Invalid filename for request %s %s', $request->getMethod(), $request->getRequestUri()));
     }
 
     public function requestsMocksNamesProvider()
@@ -147,7 +150,8 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
         return [
             [Request::create('/', 'GET'), 'GET__.json'],
             [Request::create('/categories', 'GET'), 'categories/GET__.json'],
-            [Request::create('/categories?order[foo]=asc&order[bar]=desc', 'GET'), 'categories/GET__--order[bar]=desc&order[foo]=asc.json'],
+            [Request::create('/categories?order[foo]=asc&order[bar]=desc', 'GET'), 'categories/GET__--order%5Bbar%5D=desc&order%5Bfoo%5D=asc.json'],
+            [Request::create('/categories?parent=/my/iri', 'GET'), 'categories/GET__--parent=%2Fmy%2Firi.json'],
             [Request::create('/categories/1', 'GET'), 'categories/GET__1.json'],
             [Request::create('/categories/1/articles', 'GET'), 'categories/1/GET__articles.json'],
             [Request::create('/categories', 'POST', ['foo1' => 'bar1', 'foo2' => 'bar2']), 'categories/POST____3e038.json'],
