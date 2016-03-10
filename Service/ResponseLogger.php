@@ -115,7 +115,7 @@ class ResponseLogger
 
         // Add query parameters
         if (count($requestQueryParameters)) {
-            $requestQueryParametersString = http_build_query(self::sortArray($requestQueryParameters));
+            $requestQueryParametersString = self::httpBuildQuery(self::sortArray($requestQueryParameters));
 
             // Url encode filename if needed
             if ($this->hashQueryParams) {
@@ -170,6 +170,18 @@ class ResponseLogger
         }
 
         return json_encode($data, $options);
+    }
+
+    /**
+     * Transforms an array onto query string.
+     *
+     * @param string $data
+     *
+     * @return string
+     */
+    private function httpBuildQuery($data)
+    {
+        return http_build_query($data, '', '&', PHP_QUERY_RFC3986);
     }
 
     /**
