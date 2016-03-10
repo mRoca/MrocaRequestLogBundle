@@ -181,7 +181,7 @@ class ResponseLogger
      */
     private function httpBuildQuery($data)
     {
-        return http_build_query($data, '', '&', PHP_QUERY_RFC3986);
+        return http_build_query($data);
     }
 
     /**

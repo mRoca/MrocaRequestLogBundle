@@ -63,16 +63,17 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testLogGetReponse()
     {
-        $request = Request::create('/categories?order[name]=asc&limit=5', 'GET');
+        $request = Request::create('/categories?order[parent.name]=asc+desc&limit=5', 'GET');
         $response = Response::create(json_encode(['foo' => 'bar']), Response::HTTP_OK, ['Content-Type' => 'application/json']);
 
         $file = $this->responseLogger->logReponse($request, $response);
 
         self::assertTrue(is_file($file));
+        self::assertContains('/categories/GET__--limit=5&order%5Bparent.name%5D=asc+desc.json', $file);
 
         self::assertJsonStringEqualsJsonFile($file, '{
             "request": {
-                "uri": "/categories?order[name]=asc&limit=5",
+                "uri": "/categories?order[parent.name]=asc+desc&limit=5",
                 "method": "GET",
                 "parameters": [],
                 "content": ""
@@ -151,7 +152,7 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
             [Request::create('/', 'GET'), 'GET__.json'],
             [Request::create('/categories', 'GET'), 'categories/GET__.json'],
             [Request::create('/categories?order[foo]=asc&order[bar]=desc', 'GET'), 'categories/GET__--order%5Bbar%5D=desc&order%5Bfoo%5D=asc.json'],
-            [Request::create('/categories?parent=/my/iri&master.name=foo+bar', 'GET'), 'categories/GET__--master_name=foo%20bar&parent=%2Fmy%2Firi.json'],
+            [Request::create('/categories?parent=/my/iri&master.name=foo+bar.test', 'GET'), 'categories/GET__--master_name=foo+bar.test&parent=%2Fmy%2Firi.json'],
             [Request::create('/categories/1', 'GET'), 'categories/GET__1.json'],
             [Request::create('/categories/1/articles', 'GET'), 'categories/1/GET__articles.json'],
             [Request::create('/categories', 'POST', ['foo1' => 'bar1', 'foo2' => 'bar2']), 'categories/POST____3e038.json'],
