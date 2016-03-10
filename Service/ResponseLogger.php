@@ -78,7 +78,7 @@ class ResponseLogger
             ],
         ];
 
-        $this->filesystem->dumpFile($this->mocksDir.$filename, json_encode($dumpFileContent, JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE + JSON_UNESCAPED_SLASHES));
+        $this->filesystem->dumpFile($this->mocksDir.$filename, self::jsonEncode($dumpFileContent, true));
 
         return $this->mocksDir.$filename;
     }
@@ -131,7 +131,7 @@ class ResponseLogger
             // If JSON, sort data
             $jsonContent = json_decode($requestContent, true);
             if (null !== $jsonContent) {
-                $filename .= self::FILENAME_SEPARATOR.$this->generateFilenameHash(json_encode(self::sortArray($jsonContent)));
+                $filename .= self::FILENAME_SEPARATOR.$this->generateFilenameHash(self::jsonEncode(self::sortArray($jsonContent)));
             } else {
                 $filename .= self::FILENAME_SEPARATOR.$this->generateFilenameHash($requestContent);
             }
@@ -139,7 +139,7 @@ class ResponseLogger
 
         // Add request parameters hash
         if ($requestParameters) {
-            $filename .= self::FILENAME_SEPARATOR.$this->generateFilenameHash(json_encode(self::sortArray($requestParameters)));
+            $filename .= self::FILENAME_SEPARATOR.$this->generateFilenameHash(self::jsonEncode(self::sortArray($requestParameters)));
         }
 
         // Add HTTP method
@@ -151,6 +151,25 @@ class ResponseLogger
         $filename .= '.json';
 
         return $filename;
+    }
+
+    /**
+     * Json encodes and returns a string.
+     *
+     * @param string $data
+     * @param bool   $pretty
+     *
+     * @return string
+     */
+    private function jsonEncode($data, $pretty = false)
+    {
+        $options = JSON_UNESCAPED_UNICODE + JSON_UNESCAPED_SLASHES;
+
+        if ($pretty) {
+            $options += JSON_PRETTY_PRINT;
+        }
+
+        return json_encode($data, $options);
     }
 
     /**

@@ -155,6 +155,7 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
             [Request::create('/categories/1', 'GET'), 'categories/GET__1.json'],
             [Request::create('/categories/1/articles', 'GET'), 'categories/1/GET__articles.json'],
             [Request::create('/categories', 'POST', ['foo1' => 'bar1', 'foo2' => 'bar2']), 'categories/POST____3e038.json'],
+            [Request::create('/categories', 'POST', ['foo1' => 'b/ar', 'foo2' => 'b&nbsp;ar']), 'categories/POST____293e3.json'],
             [Request::create('/categories', 'POST', ['foo2' => 'bar2', 'foo1' => 'bar1']), 'categories/POST____3e038.json'],
             [Request::create('/categories', 'POST', [], [], [], [], 'foobar'), 'categories/POST____8843d.json'],
             [Request::create('/categories', 'POST', [], [], [], [], json_encode(['foo' => 'bar'])), 'categories/POST____a5e74.json'],
