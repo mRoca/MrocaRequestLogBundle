@@ -24,6 +24,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('mocks_dir')->cannotBeEmpty()->info('The generated log files path')->defaultValue('%kernel.logs_dir%/mocks/')->end()
                 ->booleanNode('hash_query_params')->info('Transform query params string into hash in the file names')->defaultFalse()->end()
+                ->booleanNode('use_indexed_associative_array')->info('Use indexed foo[0]=bar format instead of foo[]=bar')->defaultFalse()->end()
             ->end()
         ;
 

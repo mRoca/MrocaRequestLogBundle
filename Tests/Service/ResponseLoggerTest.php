@@ -133,6 +133,16 @@ class ResponseLoggerTest extends \PHPUnit_Framework_TestCase
         self::assertSame('categories/GET__--90150.json', $filename);
     }
 
+    public function testGetNonIndexedArrayParams()
+    {
+        $responseLogger = new ResponseLogger($this->workspace, false, true);
+        $request = Request::create('/categories?search[category][]=foo', 'GET');
+
+        $filename = $responseLogger->getFilePathByRequest($request);
+
+        self::assertSame('categories/GET__--search%5Bcategory%5D%5B0%5D=foo.json', $filename);
+    }
+
     /**
      * @dataProvider requestsMocksNamesProvider
      *

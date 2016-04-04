@@ -4,6 +4,7 @@ services:
         arguments:
             - '%mroca_request_log.mocks_dir%'
             - '%mroca_request_log.hash_query_params%'
+            - '%mroca_request_log.use_indexed_associative_array%'
 
     mroca_request_log.reponse_log_listener:
         class: Mroca\RequestLogBundle\EventListener\ResponseLogSubscriber

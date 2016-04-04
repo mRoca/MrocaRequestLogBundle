@@ -88,6 +88,9 @@ PUT /categories/1 CONTENT: {"foo2":"bar2", "foo1":"bar1"}   | categories/POST__1
     The filenames query strings can be hashed by setting the `hash_query_params` option to `true`.
     For example, `categories/GET__--order[bar]=desc&order[foo]=asc.json` will be `categories/GET__--b0324.json`
 
+    The filenames query strings with non-asssocitive arrays are not indexed by default : `?foo[]=bar`.
+    You can use the indexed format by setting the `use_indexed_associative_array` option to `true` : `?foo[0]=bar`.
+
 See the [ResponseLoggerTest](/Tests/Service/ResponseLoggerTest.php#L135) file for more examples.
 
 ## Installation
@@ -124,6 +127,7 @@ public function registerBundles()
 mroca_request_log:
     mocks_dir: %kernel.logs_dir%/mocks/
     hash_query_params: false
+    use_indexed_associative_array: false
 ```
 
 **If your are using the NelmioCorsBundle** or another CORS protection, you must add the header in the allowed ones :

@@ -14,16 +14,20 @@ class ResponseLogger
     /** @var bool */
     private $hashQueryParams;
 
+    /** @var bool */
+    private $useIndexedAssociativeArray;
+
     /** @var Filesystem */
     private $filesystem;
 
     const FILENAME_SEPARATOR = '__';
     const FILENAME_QS_SEPARATOR = '--';
 
-    public function __construct($mocksDir, $hashQueryParams = false)
+    public function __construct($mocksDir, $hashQueryParams = false, $useIndexedAssociativeArray = false)
     {
         $this->mocksDir = rtrim($mocksDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
         $this->hashQueryParams = (bool) $hashQueryParams;
+        $this->useIndexedAssociativeArray = (bool) $useIndexedAssociativeArray;
         $this->filesystem = new Filesystem();
     }
 
@@ -192,9 +196,8 @@ class ResponseLogger
         $isNonAssociativeArray = self::isNonAssociativeArray($data);
 
         foreach ($data as $key => $value) {
-
             if ($isChildren) {
-                $key = $isNonAssociativeArray ? $keyPrefix.'[]' : $keyPrefix."[$key]";
+                $key = $isNonAssociativeArray && !$this->useIndexedAssociativeArray ? $keyPrefix.'[]' : $keyPrefix."[$key]";
             } elseif (is_int($key)) {
                 $key = $keyPrefix.$key;
             }
