@@ -78,7 +78,7 @@ URL                                                         | Filename
 GET /                                                       | GET__.json
 GET /categories                                             | categories/GET__.json
 GET /categories/1                                           | categories/GET__1.json
-GET /categories?search[category][]=foo                      | categories/GET__--search%5Bcategory%5D%5B0%5D=foo.json
+GET /categories?search[category][]=foo                      | categories/GET__--search%5Bcategory%5D%5B%5D=foo.json
 GET /categories?order[foo]=asc&order[bar]=desc              | categories/GET__--order%5Bbar%5D=desc&order%5Bfoo%5D=asc.json
 GET /categories?parent=/my/iri                              | categories/GET__--parent=%2Fmy%2Firi.json
 POST /categories PARAMS: foo1=bar1; foo2=bar2               | categories/POST____3e038.json

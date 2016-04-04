@@ -174,14 +174,40 @@ class ResponseLogger
 
     /**
      * Transforms an array onto query string.
+     * We are not using http_build_query as this function transforms `foo=[bar]` onto `foo[0]=bar`, and we want `foo[]=bar`.
      *
-     * @param string $data
+     * @param array  $data
+     * @param string $keyPrefix
+     * @param bool   $isChildren
      *
      * @return string
      */
-    private function httpBuildQuery($data)
+    private function httpBuildQuery($data, $keyPrefix = '', $isChildren = false)
     {
-        return http_build_query($data);
+        if (!is_array($data)) {
+            return '';
+        }
+
+        $result = [];
+        $isNonAssociativeArray = self::isNonAssociativeArray($data);
+
+        foreach ($data as $key => $value) {
+
+            if ($isChildren) {
+                $key = $isNonAssociativeArray ? $keyPrefix.'[]' : $keyPrefix."[$key]";
+            } elseif (is_int($key)) {
+                $key = $keyPrefix.$key;
+            }
+
+            if (is_array($value) || is_object($value)) {
+                $result[] = $this->httpBuildQuery($value, $key, true);
+                continue;
+            }
+
+            $result[] = urlencode($key).'='.urlencode($value);
+        }
+
+        return implode('&', $result);
     }
 
     /**
@@ -209,7 +235,7 @@ class ResponseLogger
             return $data;
         }
 
-        if (array_keys($data) === range(0, count($data) - 1)) {
+        if (self::isNonAssociativeArray($data)) {
             sort($data);
         } else {
             ksort($data);
@@ -220,5 +246,17 @@ class ResponseLogger
         }
 
         return $data;
+    }
+
+    /**
+     * Returns true if the array is detected as non-associative.
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    private static function isNonAssociativeArray($data)
+    {
+        return is_array($data) && array_keys($data) === range(0, count($data) - 1);
     }
 }
